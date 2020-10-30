@@ -1,7 +1,6 @@
 import olefile
 import zlib
 import struct
-import binascii
 
 
 def get_hwp_text(filename):
