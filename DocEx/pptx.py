@@ -9,33 +9,33 @@ TEXT = NAMESPACE + 't'
 
 
 def get_pptx_text(filename):
-	document = zipfile.ZipFile(filename)
-	text_list = []
+    document = zipfile.ZipFile(filename)
+    text_list = []
 
-	# 각 슬라이드 name들 추출
-	nums = []
-	for d in document.namelist():
-		if d.startswith("ppt/slides/slide"):
-			nums.append(int(d[len("ppt/slides/slide"):-4]))
+    # 각 슬라이드 name들 추출
+    nums = []
+    for d in document.namelist():
+        if d.startswith("ppt/slides/slide"):
+            nums.append(int(d[len("ppt/slides/slide"):-4]))
 
-	s_format = "ppt/slides/slide%s.xml"
-	slide_name_list = [s_format % x for x in sorted(nums)]
+    s_format = "ppt/slides/slide%s.xml"
+    slide_name_list = [s_format % x for x in sorted(nums)]
 
-	# 슬라이드를 순회하며 텍스트 추출
-	for slide in slide_name_list:
-		xml_content = document.read(slide)
-		tree = XML(xml_content)
-		
-		slide_text_list = []
-		for node in tree.getiterator(TEXT):
-			if node.text:
-				slide_text_list.append(node.text)
-		
-		text_list.append("\n".join(slide_text_list))
+    # 슬라이드를 순회하며 텍스트 추출
+    for slide in slide_name_list:
+        xml_content = document.read(slide)
+        tree = XML(xml_content)
+        
+        slide_text_list = []
+        for node in tree.getiterator(TEXT):
+            if node.text:
+                slide_text_list.append(node.text)
+        
+        text_list.append("\n".join(slide_text_list))
 
-	document.close()
+    document.close()
 
-	return '\n'.join(text_list)
+    return '\n'.join(text_list)
 
 
 if __name__ == '__main__':
